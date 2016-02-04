@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, request, url_for
 from flask.ext.login import (logout_user, login_required, login_user,
-    current_user, current_app)
+    current_user,)
 
 from . import auth
 from .. import db
