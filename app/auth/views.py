@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, request, url_for
 from flask.ext.login import (logout_user, login_required, login_user,
-    current_user, )
+    current_user, current_app)
 
 from . import auth
 from .. import db
@@ -66,6 +66,12 @@ def resend_confirmation():
         return redirect(url_for('main.index'))
     else:
         token = current_user.generate_confirmation_token()
+        print(
+            current_app.config['MAIL_USERNAME'], current_app.config['MAIL_PASSWORD'],
+            current_app.config['SECRET_KEY'], current_app.config['FLASKY_MAIL_SUBJECT_PREFIX'],
+            current_app.config['FLASKY_ADMIN'], current_app.config['FLASKY_MAIL_SENDER'],
+            current_app.config['MAIL_PORT'], current_app.config['MAIL_SERVER'],
+            token, current_user.email)
         send_email(current_user.email, 'Confirm Your Account',
             'auth/email/confirm', user=current_user, token=token)
         flash('A new confirmation email has been send to your email.')
