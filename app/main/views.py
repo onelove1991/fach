@@ -1,4 +1,4 @@
-#from datetime import datetime
+from datetime import datetime
 
 from flask import (render_template, request, session,current_app,
     url_for, redirect, flash, abort, make_response)
@@ -25,6 +25,7 @@ def index():
             author=current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
+    user_agent = request.headers.get('User-Agent')
     if current_user.is_authenticated:
         show_followed = bool(request.cookies.get('show_followed', ''))
     if show_followed:
@@ -36,8 +37,8 @@ def index():
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
         error_out=False)
     posts = pagination.items
-    return render_template('index.html', form=form, 
-                                            posts=posts, pagination=pagination)
+    return render_template('index.html', posts=posts, pagination=pagination,
+            current_time=datetime.utcnow(), form=form, user_agent=user_agent)
 
 @main.route('/all')
 @login_required
